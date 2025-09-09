@@ -1,15 +1,15 @@
-# conftest.py
 import pytest
-from playwright.sync_api import Playwright, Browser
-from playwright.sync_api import Page
+from playwright.sync_api import sync_playwright, Browser, Page
 
 
 @pytest.fixture(scope="function")
-def browser(playwright: Playwright) -> Browser:
-    # Используем встроенную фикстуру playwright
+def browser() -> Browser:
+    # Создаем экземпляр Playwright самостоятельно
+    playwright = sync_playwright().start()
     browser = playwright.chromium.launch(headless=False)
     yield browser
     browser.close()
+    playwright.stop()  # Важно остановить Playwright
 
 
 @pytest.fixture(scope="function")
